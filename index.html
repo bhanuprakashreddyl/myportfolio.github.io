@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bhanu Lanka — Retro Terminal Portfolio</title>
+  <meta name="description" content="Portfolio of Bhanu Lanka">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Boot Splash -->
+  <div id="boot-splash" aria-hidden="true">
+    <div class="boot-inner" id="boot-log"></div>
+  </div>
+
+  <div class="crt-overlay"></div>
+  <main id="terminal" tabindex="0" aria-label="Retro terminal">
+    <header class="brand block">
+      <div class="prompt">$ whoami</div>
+      <h1 class="glow">Bhanu Lanka</h1>
+      <p class="subtitle"><span id="role-rotator" class="role-rotator" aria-label="roles"></span></p>
+      <div class="meta">
+        <a href="mailto:bhanuprakash.l@outlook.com">bhanuprakash.l@outlook.com</a>
+        <span>·</span>
+        <a href="tel:352-740-5302">352-740-5302</a>
+        <span>·</span>
+        <span>Gainesville, FL</span>
+        <span>·</span>
+        <a href="https://www.linkedin.com/in/bhanu-prakash-l/" target="_blank" rel="noreferrer">LinkedIn</a>
+        <span>·</span>
+        <a href="https://github.com/BhanuPrakash7668" target="_blank" rel="noreferrer">GitHub</a>
+      </div>
+    </header>
+
+    <section id="about" class="block">
+      <div class="prompt">$ cat about.txt</div>
+      <p class="type">Master's grad & Data Scientist crafting innovative ML solutions at the intersection of deep learning, MLOps, and cloud tech. At UF, pioneered transformer models from scratch for crop analysis on 500M+ datasets, optimized with FSDP for multi-GPU efficiency, and fine-tuned via QLoRA for precision. Deployed RAG frameworks for actionable insights. Previously at Wipro, engineered scalable AWS pipelines, Kubernetes clusters, and CI/CD automation, slashing deployment times by 50%. Passionate about accelerating breakthroughs in Data Science—let's code the future!!</p>
+    </section>
+
+    <section id="skills" class="block">
+      <div class="prompt">$ ls skills/</div>
+      <ul class="cols">
+        <li><span class='label'>MLOps & Cloud:</span> AWS (EC2, S3, EKS, SageMaker), Azure, Docker, Kubernetes, Jenkins, Terraform, Git, MLflow, Airflow, Ansible</li><li><span class='label'>AI/LLM:</span> LangChain, RAG, Transformers, PEFT/QLoRA, PyTorch (FSDP), Hugging Face</li><li><span class='label'>Data & Langs:</span> Python, SQL, Bash, PowerShell, PostgreSQL, MongoDB</li>
+      </ul>
+    </section>
+
+    <section id="experience" class="block">
+      <div class="prompt">$ tail -n +1 experience.log</div>
+      <article><h3>Software Engineer (Machine Learning) — <span class='org'>University of Florida</span></h3><div class='time'>Jan 2024 – Present · Gainesville, FL</div><ul><li>Built transformer surrogate models (Tuber Yield, Soil N) trained on 500M+ synthetic samples.</li><li>Orchestrated distributed training with PyTorch FSDP on multi‑GPU clusters.</li><li>Designed a RAG framework using gradient‑based sensitivity for fertilizer recommendations.</li><li>Fine‑tuned with QLoRA on small, high‑value datasets to boost real‑world accuracy.</li><li>Managed 10k+ drone images with Python GIS libraries to feed training pipelines.</li></ul></article><article><h3>Software Engineer (Cloud Infrastructure) — <span class='org'>Wipro</span></h3><div class='time'>Jul 2021 – Aug 2023 · Hyderabad, India (Hybrid)</div><ul><li>Built AWS infra with Terraform for scalable deep‑learning training & inference.</li><li>Containerized Java/Node/Python apps with ECS Fargate; cut deploy time by ~50%.</li><li>Implemented CI/CD with Jenkins & Git; increased deploy velocity by ~60%.</li><li>Operated EKS for 6+ apps; +35% uptime, −60% manual ops via Helm/YAML.</li><li>Reduced EC2 costs by ~40% with Lambda‑driven non‑prod scheduling.</li></ul></article><article><h3>Cloud Engineer Intern — <span class='org'>Devathon</span></h3><div class='time'>Jul 2020 – Jun 2021 · India</div><ul><li>Automated security checks with AWS Config and least‑privilege IAM; −50% audit prep time.</li><li>Refactored monoliths to microservices with Docker/K8s; +25% performance; added DR with automated backups.</li></ul></article>
+    </section>
+
+    <section id="projects" class="block">
+      <div class="prompt">$ tree projects/ -L 1</div>
+      <div class="grid">
+        <a class='card' href='https://github.com/BhanuPrakash7668/Kursor' target='_blank' rel='noreferrer'><h4>Kursor</h4><div class='stack'>Python · ReAct · Terminal Agent</div><p>AI agent for your terminal that uses ReAct to manage files, write code, and execute shell commands from natural language.</p></a><a class='card' href='https://github.com/BhanuPrakash7668/Self-Rag' target='_blank' rel='noreferrer'><h4>Self-RAG</h4><div class='stack'>Python · LangGraph · RAG</div><p>Self-RAG agent with multi-stage retrieval and self-reflection for higher-fidelity answers.</p></a><a class='card' href='https://github.com/BhanuPrakash7668/Corrective-RAG' target='_blank' rel='noreferrer'><h4>Corrective-RAG</h4><div class='stack'>Python · LangChain · Web Search</div><p>Corrective RAG workflow that adds web-search fallback and iterative refinement.</p></a><a class='card' href='https://github.com/BhanuPrakash7668/LangCraft' target='_blank' rel='noreferrer'><h4>LangCraft</h4><div class='stack'>Python · LangChain/LangGraph</div><p>Agent that generates personalized LinkedIn posts using few-shot learning from your style.</p></a><a class='card' href='https://github.com/BhanuPrakash7668/langgraph-sql-agent' target='_blank' rel='noreferrer'><h4>LangGraph SQL Agent</h4><div class='stack'>Python/Notebook · SQLAlchemy</div><p>Interactive AI-powered SQL agent that translates questions into SQL for a food-ordering database.</p></a><a class='card' href='https://github.com/BhanuPrakash7668/langchain-sql-agent' target='_blank' rel='noreferrer'><h4>LangChain SQL Agent (demo)</h4><div class='stack'>Python/Notebook · LangChain</div><p>Builds an LLM agent that understands questions, queries a SQL DB, and explains results.</p></a>
+      </div>
+      <p class="note">More on GitHub → <a href="https://github.com/BhanuPrakash7668" target="_blank" rel="noreferrer">https://github.com/BhanuPrakash7668</a></p>
+    </section>
+
+    <section id="academics" class="block">
+      <div class="prompt">$ grep -R \"education\" ./profile.json</div>
+      <ul>
+        <li>M.S. in Computer Science — University of Florida</li>
+        <li>M-Tech Integrated in Computer Science — Vellore Institute of Technology</li>
+      </ul>
+      <div class="prompt">$ grep -R \"certifications\" ./profile.json</div>
+      <ul>
+        <li>AWS Certified Solutions Architect</li><li>Applied Data Science with Python (U. Michigan)</li><li>Advanced Learning Algorithms (DeepLearning.AI)</li>
+      </ul>
+      <div class="prompt">$ ls Research & Exploration/</div>
+      <ul>
+        <li><strong>Symbolic Chain‑of‑Thought Distillation for Small LMs (May 2025)</strong> — Distilled reasoning from DeepSeek‑8B to Llama‑3.2‑1B on GSM8K using LoRA; improved accuracy at small scale.</li><li><strong>Reddit Content Summarization Bot (Jan 2025)</strong> — Flask + React app with fine‑tuned HF Transformers; real‑time Reddit summarization and sentiment; deployed on Heroku/AWS.</li>
+      </ul>
+    </section>
+
+    <section id="contact" class="block">
+      <div class="prompt">$ echo \"ping\" | nc contact.me 1337</div>
+      <form id="contact-form">
+        <label>your_email@domain</label>
+        <input type="email" name="email" placeholder="you@domain.com" required />
+        <label>message</label>
+        <textarea name="message" rows="4" placeholder="hi Bhanu..." required></textarea>
+        <button type="submit">send</button>
+        <span id="status" role="status" aria-live="polite"></span>
+      </form>
+    </section>
+
+    <footer class="block foot">
+      <div class="prompt">$ date</div>
+      <p>Last updated: Aug 23, 2025</p>
+    </footer>
+  </main>
+  <script src="js/app.js"></script>
+</body>
+</html>

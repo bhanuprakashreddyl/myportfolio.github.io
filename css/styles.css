@@ -1,0 +1,129 @@
+
+:root{
+  --bg:#0b0f0a;
+  --text:#9be27d;
+  --accent:#56f39a;
+  --dim:#3a6b4a;
+  --glow:0 0 6px #9be27d, 0 0 12px #56f39a;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background-color: var(--bg);
+  color:var(--text);
+  font-family:'Share Tech Mono','VT323',ui-monospace,monospace;
+  line-height:1.6;
+  text-shadow:0 0 1px rgba(155,226,125,.3);
+  overflow-x:hidden;
+}
+
+/* animated grid background */
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background:
+    linear-gradient(to right, rgba(86,243,154,.15) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(86,243,154,.15) 1px, transparent 1px);
+  background-size:40px 40px;
+  animation:scrollGrid 30s linear infinite;
+  z-index:-2;
+}
+@keyframes scrollGrid{
+  from{background-position:0 0}
+  to{background-position:40px 40px}
+}
+
+/* CRT scanlines */
+.crt-overlay{
+  pointer-events:none;
+  position:fixed;inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,.02),rgba(0,0,0,.02)),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.12), rgba(0,0,0,.12) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode:overlay;
+  opacity:.35;
+  z-index:-1;
+}
+
+#terminal{
+  width:100%;
+  max-width:1400px;
+  margin:0 auto;
+  padding:40px 30px;
+  position:relative;
+}
+.brand{margin-bottom:24px;text-align:center}
+.brand .prompt{color:var(--dim)}
+.brand h1{margin:0;font-size:3rem;text-shadow:var(--glow)}
+.subtitle{margin:6px 0 10px;color:#b7ffb7;font-size:1.3rem;min-height:1.5em}
+.meta{margin-top:8px}
+.meta a, .meta span{color:var(--text);opacity:.9;margin-right:8px;text-decoration:none}
+.meta a:hover{color:#c3ffc3;text-decoration:underline}
+
+.block{border:1px solid var(--dim); padding:22px 18px;margin:26px auto;background:rgba(13,20,13,.65); box-shadow:0 0 0 1px #0a140a, 0 0 26px rgba(86,243,154,.05) inset; border-radius:6px}
+.block .prompt{color:var(--dim);margin-bottom:10px}
+.block .type{white-space:pre-wrap}
+
+.cols{list-style:none;padding:0;margin:0}
+.cols li{margin-bottom:10px}
+.cols .label{color:#c1ffc1}
+
+.org{color:#c1ffc1}
+.time{color:var(--dim);margin-bottom:8px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.card{display:block;border:1px dashed var(--dim);padding:16px;border-radius:8px;text-decoration:none;color:var(--text);background:#0c120b}
+.card h4{margin:0 0 6px 0;color:#d8ffd8;font-size:1.1rem}
+.card .stack{color:#b7ffb7;font-size:.95rem;margin-bottom:8px;opacity:.9}
+.card:hover{box-shadow:0 0 0 1px var(--accent), 0 0 16px rgba(86,243,154,.25)}
+
+#contact-form{display:grid;gap:10px}
+#contact-form input, #contact-form textarea{
+  background:#0a120a;border:1px solid var(--dim);color:var(--text);padding:10px;border-radius:6px;
+}
+#contact-form button{
+  background:#0a120a;border:1px solid var(--accent);color:#d8ffd8;padding:10px;border-radius:6px;cursor:pointer;
+  text-transform:lowercase;letter-spacing:.5px;
+  box-shadow:0 0 10px rgba(86,243,154,.2);
+}
+#contact-form button:hover{box-shadow:0 0 16px rgba(86,243,154,.35)}
+
+.foot{opacity:.85;font-size:.95rem;text-align:center}
+
+/* Accessibility focus */
+:focus{outline:2px dashed var(--accent);outline-offset:3px}
+
+/* --- Typing/reveal --- */
+.prompt.typing::after{ content:"_"; display:inline-block; animation:blink 1s steps(1,end) infinite; margin-left:2px; }
+@keyframes blink{ 50% { opacity:0; } }
+.block .revealable{ opacity:0; transform:translateY(6px); transition:opacity .45s ease, transform .45s ease; }
+.block.revealed .revealable{ opacity:1; transform:none; }
+.typewriter{ white-space:pre-wrap }
+
+/* Rotating typing subtitle */
+.role-rotator{ position:relative; padding-right:10px; }
+.role-rotator::after{ content:"_"; position:absolute; right:0; animation:blink 1s steps(1,end) infinite; }
+
+
+/* ===== Boot Splash (BIOS-style) ===== */
+#boot-splash{
+  position:fixed; inset:0; background:#000; color:#9be27d; 
+  font-family:'Share Tech Mono','VT323',ui-monospace,monospace; 
+  z-index:9999; display:flex; align-items:center; justify-content:center;
+  transition:opacity .6s ease, visibility .6s ease;
+}
+#boot-splash.hidden{ opacity:0; visibility:hidden }
+#boot-splash .boot-inner{
+  width: min(920px, 92vw);
+  max-height: 86vh;
+  overflow:hidden;
+  border:1px solid #245c2f;
+  background: #050805;
+  padding:18px;
+  box-shadow:0 0 0 1px #0a140a, 0 0 22px rgba(86,243,154,.1) inset;
+}
+.boot-line{ white-space:pre; line-height:1.4; }
+.boot-cursor::after{
+  content:"_"; display:inline-block; animation:blink 1s steps(1,end) infinite; margin-left:2px;
+}
