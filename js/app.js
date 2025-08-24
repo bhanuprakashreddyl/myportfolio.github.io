@@ -1,6 +1,7 @@
-// Scroll-triggered terminal typing + reveal + boot splash + role rotator (with FAST initial sequence)
+// Scroll-triggered terminal typing + reveal + boot splash + role rotator
+// First four sections (whoami → about → skills → experience) load INSTANTLY after splash
 (function(){
-  // ---- Typing util: supports speed (ms) and step (chars per tick) ----
+  // ---- Typing util (kept for later sections & non-instant runs) ----
   function typeText(el, text, opts = {}){
     const speed = opts.speed ?? 22;   // delay between ticks (ms)
     const step  = opts.step  ?? 1;    // characters per tick
@@ -56,6 +57,7 @@
     step();
   }
 
+  // Mark children for reveal animation & set up long-text typing target
   function prepBlocks(){
     document.querySelectorAll('.block').forEach(block => {
       Array.from(block.children).forEach(ch => {
@@ -70,7 +72,7 @@
     });
   }
 
-  // --- Boot splash ---
+  // --- Boot splash (BIOS-style) ---
   async function runBootSplash(){
     const splash = document.getElementById('boot-splash');
     const log = document.getElementById('boot-log');
@@ -112,41 +114,54 @@
     await new Promise(r=>setTimeout(r, 620));
   }
 
-  // ---- Run a single block (supports custom speeds/steps) ----
+  // ---- Run a single block ----
+  // Supports { instant: true } to show full command + content immediately (used for first four sections)
   async function runBlock(block, opts = {}){
     if(!block || block.dataset.done) return;
     block.dataset.done = "1";
 
-    const cmdSpeed = opts.cmdSpeed ?? 22;
-    const cmdStep  = opts.cmdStep  ?? 1;
-    const textSpeed= opts.textSpeed?? 8;
-    const textStep = opts.textStep ?? 1;
+    const instant   = opts.instant === true;
+    const cmdSpeed  = opts.cmdSpeed ?? 22;
+    const cmdStep   = opts.cmdStep  ?? 1;
+    const textSpeed = opts.textSpeed?? 8;
+    const textStep  = opts.textStep ?? 1;
 
     const prompt = block.querySelector('.prompt');
     const cmd = prompt ? prompt.textContent.trim() : '';
     if(prompt){
-      await typeText(prompt, cmd, { speed: cmdSpeed, step: cmdStep });
+      if(instant){
+        prompt.textContent = cmd; // full command instantly
+      } else {
+        await typeText(prompt, cmd, { speed: cmdSpeed, step: cmdStep });
+      }
     }
 
     const tw = block.querySelector('.typewriter, #about .type');
     if(tw){
       const text = tw.textContent.trim();
-      tw.textContent = '';
-      Array.from(block.querySelectorAll('.revealable')).forEach(n => {
-        if(n !== tw) n.parentElement.classList.add('revealed');
-      });
-      await typeText(tw, text, { speed: textSpeed, step: textStep });
-      block.classList.add('revealed');
+      if(instant){
+        tw.textContent = text;     // full paragraph instantly
+        block.classList.add('revealed');
+      } else {
+        tw.textContent = '';
+        // reveal other content while long text types
+        Array.from(block.querySelectorAll('.revealable')).forEach(n => {
+          if(n !== tw) n.parentElement.classList.add('revealed');
+        });
+        await typeText(tw, text, { speed: textSpeed, step: textStep });
+        block.classList.add('revealed');
+      }
     } else {
       block.classList.add('revealed');
     }
   }
 
+  // Scroll-triggered animation for sections after the first four
   function observeBlocks(){
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(async entry => {
         if(entry.isIntersecting){
-          // Default (slower, readable) speeds for scroll-triggered sections
+          // default speeds for scroll sections
           await runBlock(entry.target, {
             cmdSpeed: 22, cmdStep: 1,
             textSpeed: 8,  textStep: 1
@@ -162,39 +177,23 @@
       await runBootSplash();
       startRoleRotator();
     })();
+
     prepBlocks();
 
-    // ===== FAST initial sequence (post‑splash): whoami → about → skills → experience =====
+    // ===== INSTANT initial sequence after splash =====
     (async function sequence(){
-      // 1) whoami: a bit faster than default, still readable
-      const whoami = document.querySelector('header.brand.block');
-      await runBlock(whoami, {
-        cmdSpeed: 14, cmdStep: 1,
-        textSpeed: 6,  textStep: 1
-      });
-
-      // 2) about: faster paragraph typing (2 chars per tick)
-      const about = document.querySelector('#about.block');
-      await runBlock(about, {
-        cmdSpeed: 12, cmdStep: 2,
-        textSpeed: 4,  textStep: 2
-      });
-
-      // 3) skills: quick command + reveal/typing
-      const skills = document.querySelector('#skills.block');
-      await runBlock(skills, {
-        cmdSpeed: 12, cmdStep: 2,
-        textSpeed: 4,  textStep: 2
-      });
-
-      // 4) experience: still types, but much faster
+      const whoami     = document.querySelector('header.brand.block');
+      const about      = document.querySelector('#about.block');
+      const skills     = document.querySelector('#skills.block');
       const experience = document.querySelector('#experience.block');
-      await runBlock(experience, {
-        cmdSpeed: 12, cmdStep: 2,
-        textSpeed: 4,  textStep: 2
-      });
 
-      // Enable scroll-trigger for the rest (uses default speeds)
+      // Instantly render the first four sections (command + content)
+      await runBlock(whoami,     { instant: true });
+      await runBlock(about,      { instant: true });
+      await runBlock(skills,     { instant: true });
+      await runBlock(experience, { instant: true });
+
+      // Then enable scroll-trigger typing for the remaining sections
       observeBlocks();
     })();
 
@@ -206,7 +205,7 @@
         const data = Object.fromEntries(new FormData(e.target).entries());
         console.log('Contact submission', data);
         const status = document.getElementById('status');
-        if(status){ status.textContent = 'message queued — thank you!'; setTimeout(()=> status.textContent = '', 4000);}
+        if(status){ status.textContent = 'message queued — thank you!'; setTimeout(()=> status.textContent = '', 4000); }
       });
     }
   }
