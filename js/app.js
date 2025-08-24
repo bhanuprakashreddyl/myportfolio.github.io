@@ -1,23 +1,25 @@
-
-// Scroll-triggered terminal typing + reveal + boot splash + role rotator
+// Scroll-triggered terminal typing + reveal + boot splash + role rotator (with FAST initial sequence)
 (function(){
-  function typeText(el, text, speed){
+  // ---- Typing util: supports speed (ms) and step (chars per tick) ----
+  function typeText(el, text, opts = {}){
+    const speed = opts.speed ?? 22;   // delay between ticks (ms)
+    const step  = opts.step  ?? 1;    // characters per tick
     return new Promise(resolve => {
       if(!el) return resolve();
       el.classList.add('typing');
       let i = 0;
-      function step(){
-        i++;
+      el.textContent = '';
+      function tick(){
+        i += step;
         el.textContent = text.slice(0, i);
         if(i < text.length){
-          setTimeout(step, speed);
-        }else{
+          setTimeout(tick, speed);
+        } else {
           el.classList.remove('typing');
           resolve();
         }
       }
-      el.textContent = '';
-      step();
+      tick();
     });
   }
 
@@ -110,19 +112,30 @@
     await new Promise(r=>setTimeout(r, 620));
   }
 
-  // Run a single block
-  async function runBlock(block){
+  // ---- Run a single block (supports custom speeds/steps) ----
+  async function runBlock(block, opts = {}){
     if(!block || block.dataset.done) return;
     block.dataset.done = "1";
+
+    const cmdSpeed = opts.cmdSpeed ?? 22;
+    const cmdStep  = opts.cmdStep  ?? 1;
+    const textSpeed= opts.textSpeed?? 8;
+    const textStep = opts.textStep ?? 1;
+
     const prompt = block.querySelector('.prompt');
     const cmd = prompt ? prompt.textContent.trim() : '';
-    if(prompt){ await typeText(prompt, cmd, 22); }
+    if(prompt){
+      await typeText(prompt, cmd, { speed: cmdSpeed, step: cmdStep });
+    }
+
     const tw = block.querySelector('.typewriter, #about .type');
     if(tw){
       const text = tw.textContent.trim();
       tw.textContent = '';
-      Array.from(block.querySelectorAll('.revealable')).forEach(n => { if(n !== tw) n.parentElement.classList.add('revealed'); });
-      await typeText(tw, text, 8);
+      Array.from(block.querySelectorAll('.revealable')).forEach(n => {
+        if(n !== tw) n.parentElement.classList.add('revealed');
+      });
+      await typeText(tw, text, { speed: textSpeed, step: textStep });
       block.classList.add('revealed');
     } else {
       block.classList.add('revealed');
@@ -133,7 +146,11 @@
     const io = new IntersectionObserver((entries)=>{
       entries.forEach(async entry => {
         if(entry.isIntersecting){
-          await runBlock(entry.target);
+          // Default (slower, readable) speeds for scroll-triggered sections
+          await runBlock(entry.target, {
+            cmdSpeed: 22, cmdStep: 1,
+            textSpeed: 8,  textStep: 1
+          });
         }
       });
     }, { rootMargin: "0px 0px -15% 0px", threshold: 0.2 });
@@ -147,14 +164,37 @@
     })();
     prepBlocks();
 
-    // Auto-run first sections
-    const orderSelectors = ['header.brand.block', '#about.block', '#skills.block', '#experience.block'];
+    // ===== FAST initial sequence (post‑splash): whoami → about → skills → experience =====
     (async function sequence(){
-      for(const sel of orderSelectors){
-        const block = document.querySelector(sel);
-        await runBlock(block);
-      }
-      // enable scroll for the rest
+      // 1) whoami: a bit faster than default, still readable
+      const whoami = document.querySelector('header.brand.block');
+      await runBlock(whoami, {
+        cmdSpeed: 14, cmdStep: 1,
+        textSpeed: 6,  textStep: 1
+      });
+
+      // 2) about: faster paragraph typing (2 chars per tick)
+      const about = document.querySelector('#about.block');
+      await runBlock(about, {
+        cmdSpeed: 12, cmdStep: 2,
+        textSpeed: 4,  textStep: 2
+      });
+
+      // 3) skills: quick command + reveal/typing
+      const skills = document.querySelector('#skills.block');
+      await runBlock(skills, {
+        cmdSpeed: 12, cmdStep: 2,
+        textSpeed: 4,  textStep: 2
+      });
+
+      // 4) experience: still types, but much faster
+      const experience = document.querySelector('#experience.block');
+      await runBlock(experience, {
+        cmdSpeed: 12, cmdStep: 2,
+        textSpeed: 4,  textStep: 2
+      });
+
+      // Enable scroll-trigger for the rest (uses default speeds)
       observeBlocks();
     })();
 
